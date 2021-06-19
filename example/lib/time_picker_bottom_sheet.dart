@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_cupertino_datetime_picker_tv/flutter_cupertino_datetime_picker.dart';
+import 'package:flutter_cupertino_datetime_picker_tv/flutter_cupertino_datetime_picker_tv.dart';
 
 class TimePickerBottomSheet extends StatefulWidget {
   TimePickerBottomSheet({Key? key}) : super(key: key);

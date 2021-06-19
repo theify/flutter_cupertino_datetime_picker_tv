@@ -1,4 +1,4 @@
-library flutter_cupertino_date_picker;
+library flutter_cupertino_date_picker_tv;
 
 export 'src/date_picker.dart';
 export 'src/i18n/date_picker_i18n.dart';
