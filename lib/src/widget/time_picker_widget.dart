@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-import '../date_time_formatter.dart';
-import '../date_picker_theme.dart';
 import '../date_picker_constants.dart';
+import '../date_picker_theme.dart';
+import '../date_time_formatter.dart';
 import '../i18n/date_picker_i18n.dart';
 import 'date_picker_title_widget.dart';
 
@@ -41,11 +41,7 @@ class TimePickerWidget extends StatefulWidget {
   final int minuteDivider;
 
   @override
-  State<StatefulWidget> createState() => _TimePickerWidgetState(
-      this.minDateTime,
-      this.maxDateTime,
-      this.initDateTime,
-      this.minuteDivider);
+  State<StatefulWidget> createState() => _TimePickerWidgetState(this.minDateTime, this.maxDateTime, this.initDateTime, this.minuteDivider);
 }
 
 class _TimePickerWidgetState extends State<TimePickerWidget> {
@@ -53,17 +49,14 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
   late int _currHour, _currMinute, _currSecond;
   late int _minuteDivider;
   late List<int> _hourRange, _minuteRange, _secondRange;
-  late FixedExtentScrollController _hourScrollCtrl,
-      _minuteScrollCtrl,
-      _secondScrollCtrl;
+  late FixedExtentScrollController _hourScrollCtrl, _minuteScrollCtrl, _secondScrollCtrl;
 
   late Map<String, FixedExtentScrollController> _scrollCtrlMap;
   late Map<String, List<int>?> _valueRangeMap;
 
   bool _isChangeTimeRange = false;
 
-  _TimePickerWidgetState(DateTime? minTime, DateTime? maxTime,
-      DateTime? initTime, int minuteDivider) {
+  _TimePickerWidgetState(DateTime? minTime, DateTime? maxTime, DateTime? initTime, int minuteDivider) {
     if (minTime == null) {
       minTime = DateTime.parse(DATE_PICKER_MIN_DATETIME);
     }
@@ -88,35 +81,25 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
 
     // limit the range of minute
     this._minuteRange = _calcMinuteRange();
-    this._currMinute =
-        min(max(_minuteRange.first, _currMinute), _minuteRange.last);
+    this._currMinute = min(max(_minuteRange.first, _currMinute), _minuteRange.last);
 
     // limit the range of second
     this._secondRange = _calcSecondRange();
-    this._currSecond =
-        min(max(_secondRange.first, _currSecond), _secondRange.last);
+    this._currSecond = min(max(_secondRange.first, _currSecond), _secondRange.last);
 
     // create scroll controller
-    _hourScrollCtrl =
-        FixedExtentScrollController(initialItem: _currHour - _hourRange.first);
-    _minuteScrollCtrl = FixedExtentScrollController(
-        initialItem: (_currMinute - _minuteRange.first) ~/ _minuteDivider);
-    _secondScrollCtrl = FixedExtentScrollController(
-        initialItem: _currSecond - _secondRange.first);
+    _hourScrollCtrl = FixedExtentScrollController(initialItem: _currHour - _hourRange.first);
+    _minuteScrollCtrl = FixedExtentScrollController(initialItem: (_currMinute - _minuteRange.first) ~/ _minuteDivider);
+    _secondScrollCtrl = FixedExtentScrollController(initialItem: _currSecond - _secondRange.first);
 
-    _scrollCtrlMap = {
-      'H': _hourScrollCtrl,
-      'm': _minuteScrollCtrl,
-      's': _secondScrollCtrl
-    };
+    _scrollCtrlMap = {'H': _hourScrollCtrl, 'm': _minuteScrollCtrl, 's': _secondScrollCtrl};
     _valueRangeMap = {'H': _hourRange, 'm': _minuteRange, 's': _secondRange};
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Material(
-          color: Colors.transparent, child: _renderPickerView(context)),
+      child: Material(color: Colors.transparent, child: _renderPickerView(context)),
     );
   }
 
@@ -125,7 +108,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
     Widget pickerWidget = _renderDatePickerWidget();
 
     // display the title widget
-    if (widget.pickerTheme.title != null || widget.pickerTheme.showTitle) {
+    if (widget.pickerTheme.showTitle) {
       Widget titleWidget = DatePickerTitleWidget(
         pickerTheme: widget.pickerTheme,
         locale: widget.locale,
@@ -149,8 +132,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
   void _onPressedConfirm() {
     if (widget.onConfirm != null) {
       DateTime now = DateTime.now();
-      DateTime dateTime = DateTime(
-          now.year, now.month, now.day, _currHour, _currMinute, _currSecond);
+      DateTime dateTime = DateTime(now.year, now.month, now.day, _currHour, _currMinute, _currSecond);
       widget.onConfirm!(dateTime, _calcSelectIndexList());
     }
     Navigator.pop(context);
@@ -160,8 +142,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
   void _onSelectedChange() {
     if (widget.onChange != null) {
       DateTime now = DateTime.now();
-      DateTime dateTime = DateTime(
-          now.year, now.month, now.day, _currHour, _currMinute, _currSecond);
+      DateTime dateTime = DateTime(now.year, now.month, now.day, _currHour, _currMinute, _currSecond);
       widget.onChange!(dateTime, _calcSelectIndexList());
     }
   }
@@ -197,8 +178,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
   /// render the picker widget of year、month and day
   Widget _renderDatePickerWidget() {
     List<Widget> pickers = [];
-    List<String> formatArr =
-        DateTimeFormatter.splitDateFormat(widget.dateFormat);
+    List<String> formatArr = DateTimeFormatter.splitDateFormat(widget.dateFormat);
     formatArr.forEach((format) {
       List<int> valueRange = _findPickerItemRange(format);
 
@@ -219,8 +199,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
       );
       pickers.add(pickerColumn);
     });
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, children: pickers);
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: pickers);
   }
 
   Widget _renderDatePickerColumnComponent({
@@ -241,9 +220,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
           scrollController: scrollCtrl,
           itemExtent: widget.pickerTheme.itemHeight,
           onSelectedItemChanged: valueChanged,
-          childCount: format.contains('m')
-              ? _calculateMinuteChildCount(valueRange, minuteDivider)
-              : valueRange.last - valueRange.first + 1,
+          childCount: format.contains('m') ? _calculateMinuteChildCount(valueRange, minuteDivider) : valueRange.last - valueRange.first + 1,
           itemBuilder: (context, index) {
             int value = valueRange.first + index;
 
@@ -315,16 +292,14 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
     _isChangeTimeRange = true;
 
     List<int> minuteRange = _calcMinuteRange();
-    bool minuteRangeChanged = _minuteRange.first != minuteRange.first ||
-        _minuteRange.last != minuteRange.last;
+    bool minuteRangeChanged = _minuteRange.first != minuteRange.first || _minuteRange.last != minuteRange.last;
     if (minuteRangeChanged) {
       // selected hour changed
       _currMinute = max(min(_currMinute, minuteRange.last), minuteRange.first);
     }
 
     List<int> secondRange = _calcSecondRange();
-    bool secondRangeChanged = _secondRange.first != secondRange.first ||
-        _secondRange.last != secondRange.last;
+    bool secondRangeChanged = _secondRange.first != secondRange.first || _secondRange.last != secondRange.last;
     if (secondRangeChanged) {
       // second range changed, need limit the value of selected second
       _currSecond = max(min(_currSecond, secondRange.last), secondRange.first);
@@ -341,8 +316,7 @@ class _TimePickerWidgetState extends State<TimePickerWidget> {
     if (minuteRangeChanged) {
       // CupertinoPicker refresh data not working (https://github.com/flutter/flutter/issues/22999)
       int currMinute = _currMinute;
-      _minuteScrollCtrl
-          .jumpToItem((minuteRange.last - minuteRange.first) ~/ _minuteDivider);
+      _minuteScrollCtrl.jumpToItem((minuteRange.last - minuteRange.first) ~/ _minuteDivider);
       if (currMinute < minuteRange.last) {
         _minuteScrollCtrl.jumpToItem(currMinute - minuteRange.first);
       }

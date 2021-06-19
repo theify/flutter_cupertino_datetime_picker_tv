@@ -23,9 +23,6 @@ class DatePickerTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (pickerTheme.title != null) {
-      return pickerTheme.title!;
-    }
     return Container(
       height: pickerTheme.titleHeight,
       decoration: BoxDecoration(color: pickerTheme.backgroundColor),
@@ -33,6 +30,7 @@ class DatePickerTitleWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           _renderCancelWidget(context),
+          _renderTitleWidget(context),
           _renderConfirmWidget(context),
         ],
       ),
@@ -41,13 +39,6 @@ class DatePickerTitleWidget extends StatelessWidget {
 
   /// render cancel button widget
   Widget _renderCancelWidget(BuildContext context) {
-    if (isCustomTitleWidget()) {
-      // has custom title button widget
-      if (pickerTheme.cancel == null) {
-        return Offstage();
-      }
-    }
-
     Widget? cancelWidget = pickerTheme.cancel;
     if (cancelWidget == null) {
       TextStyle textStyle = pickerTheme.cancelTextStyle ??
@@ -71,15 +62,21 @@ class DatePickerTitleWidget extends StatelessWidget {
     );
   }
 
-  /// render confirm button widget
-  Widget _renderConfirmWidget(BuildContext context) {
-    if (isCustomTitleWidget()) {
-      // has custom title button widget
-      if (pickerTheme.confirm == null) {
-        return Offstage();
-      }
+  /// render title widget
+  Widget _renderTitleWidget(BuildContext context) {
+    if (pickerTheme.title == null) {
+      return Offstage();
     }
 
+    return Container(
+      alignment: Alignment.center,
+      height: pickerTheme.titleHeight,
+      child: pickerTheme.title,
+    );
+  }
+
+  /// render confirm button widget
+  Widget _renderConfirmWidget(BuildContext context) {
     Widget? confirmWidget = pickerTheme.confirm;
     if (confirmWidget == null) {
       TextStyle textStyle = pickerTheme.confirmTextStyle ??
@@ -101,11 +98,5 @@ class DatePickerTitleWidget extends StatelessWidget {
         onPressed: () => this.onConfirm(),
       ),
     );
-  }
-
-  bool isCustomTitleWidget() {
-    return pickerTheme.cancel != null ||
-        pickerTheme.confirm != null ||
-        pickerTheme.title != null;
   }
 }
